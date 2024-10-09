@@ -1,7 +1,7 @@
 package br.com.versalhes.gerente.backend.control;
 
 import br.com.versalhes.gerente.backend.model.Perfume;
-import br.com.versalhes.gerente.backend.service.PerfumeService;
+import br.com.versalhes.gerente.backend.service.CadastroService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,21 +10,22 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
+@CrossOrigin(origins="*", maxAge = 3600, allowCredentials = "false")
 @RequestMapping("/perfume")
 public class PerfumeController {
 
-    PerfumeService _perfumeService;
+    CadastroService _cadastroService;
 
-    public PerfumeController(PerfumeService perfumeService) {
+    public PerfumeController(CadastroService cadastroService) {
 
-        _perfumeService = perfumeService;
+        _cadastroService = cadastroService;
 
     }
 
     @PostMapping
     public ResponseEntity<Object> IncluirPerfume(@RequestBody Perfume perfume) {
 
-        Perfume novoPerfume = _perfumeService.IncluirPerfume(perfume);
+        Perfume novoPerfume = _cadastroService.IncluirPerfume(perfume);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(novoPerfume);
 
@@ -35,7 +36,7 @@ public class PerfumeController {
 
         try {
 
-            Perfume perfumeAtualizado = _perfumeService.AtualizarPerfume(perfume);
+            Perfume perfumeAtualizado = _cadastroService.AtualizarPerfume(perfume);
 
             return ResponseEntity.status(HttpStatus.OK).body(perfumeAtualizado);
 
@@ -52,7 +53,7 @@ public class PerfumeController {
 
         try {
 
-            _perfumeService.ExcluirPerfume(idPerfume);
+            _cadastroService.ExcluirPerfume(idPerfume);
 
             return ResponseEntity.status(HttpStatus.OK).build();
 
@@ -67,7 +68,7 @@ public class PerfumeController {
     @GetMapping
     public ResponseEntity<List<Perfume>> ConsultarPerfumeTodos() {
 
-        List<Perfume> lista = _perfumeService.ConsultarPerfumeTodos();
+        List<Perfume> lista = _cadastroService.ConsultarPerfumeTodos();
 
         return ResponseEntity.status(HttpStatus.OK).body(lista);
 
@@ -78,7 +79,7 @@ public class PerfumeController {
 
         try {
 
-            Perfume perfumeExistente = _perfumeService.ConsultarPerfumePeloId(idPerfume);
+            Perfume perfumeExistente = _cadastroService.ConsultarPerfumePeloId(idPerfume);
 
             return ResponseEntity.status(HttpStatus.OK).body(perfumeExistente);
 
@@ -103,7 +104,7 @@ public class PerfumeController {
 
             Long estoque = ((Integer) (campos.get("estoque"))).longValue();
 
-            Perfume perfumeAtualizado = _perfumeService.AtualizarEstoque(idPerfume, estoque);
+            Perfume perfumeAtualizado = _cadastroService.AtualizarEstoque(idPerfume, estoque);
 
             return ResponseEntity.status(HttpStatus.OK).body(perfumeAtualizado);
 

@@ -11,11 +11,13 @@ public class Perfume {
     @Column(name = "Id_Perfume")
     private long idPerfume;
 
-    @Column(name = "Id_Marca")
-    private long idMarca;
+    @ManyToOne
+    @JoinColumn(name="Id_Marca",nullable = false)
+    private Marca marca;
 
-    @Column(name = "Id_Tipo")
-    private long idTipo;
+    @ManyToOne
+    @JoinColumn(name="Id_Tipo",nullable = false)
+    private Tipo tipo;
 
     @Column(name = "Genero")
     private char genero;
@@ -52,20 +54,20 @@ public class Perfume {
         this.idPerfume = idPerfume;
     }
 
-    public long getIdMarca() {
-        return idMarca;
+    public Marca getMarca() {
+        return marca;
     }
 
-    public void setId_Marca(long idMarca) {
-        this.idMarca = idMarca;
+    public void setId_Marca(Marca marca) {
+        this.marca = marca;
     }
 
-    public long getIdTipo() {
-        return idTipo;
+    public Tipo getTipo() {
+        return tipo;
     }
 
-    public void setIdTipo(long idTipo) {
-        this.idTipo = idTipo;
+    public void setIdTipo(Tipo tipo) {
+        this.tipo = tipo;
     }
 
     public char getGenero() {

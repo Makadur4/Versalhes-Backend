@@ -1,7 +1,6 @@
 package br.com.versalhes.gerente.backend.service;
 
-import br.com.versalhes.gerente.backend.model.Perfume;
-import br.com.versalhes.gerente.backend.model.PerfumeRepository;
+import br.com.versalhes.gerente.backend.model.*;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -9,13 +8,33 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class PerfumeService {
+public class CadastroService {
 
     final PerfumeRepository _perfumeRepository;
+    final MarcaRepository _marcaRepository;
+    final TipoRepository _tipoRepository;
 
-    public PerfumeService(PerfumeRepository perfumeRepository) {
+    public CadastroService(PerfumeRepository perfumeRepository, MarcaRepository marcaRepository,TipoRepository tipoRepository) {
 
         _perfumeRepository = perfumeRepository;
+        _marcaRepository = marcaRepository;
+        _tipoRepository = tipoRepository;
+
+    }
+
+    public List<Marca> ConsultarMarcaTodas() {
+
+        List<Marca> lista = _marcaRepository.findAll();
+
+        return lista;
+
+    }
+
+    public List<Tipo> ConsultarTipoTodos() {
+
+        List<Tipo> lista = _tipoRepository.findAll();
+
+        return lista;
 
     }
 
