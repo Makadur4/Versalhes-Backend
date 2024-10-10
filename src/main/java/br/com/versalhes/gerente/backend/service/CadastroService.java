@@ -64,6 +64,8 @@ public class CadastroService {
 
         if (perfumeExistente.isPresent()) {
 
+            perfume.setMediaAvaliacao(perfumeExistente.get().getMediaAvaliacao());
+
             Perfume perfumeAtualizado = _perfumeRepository.save(perfume);
 
             return perfumeAtualizado;
