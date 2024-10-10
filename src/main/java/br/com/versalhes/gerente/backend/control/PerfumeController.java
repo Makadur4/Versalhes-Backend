@@ -102,7 +102,7 @@ public class PerfumeController {
 
             }
 
-            Long estoque = ((Integer) (campos.get("estoque"))).longValue();
+            long estoque = ((Integer) (campos.get("estoque"))).longValue();
 
             Perfume perfumeAtualizado = _cadastroService.AtualizarEstoque(idPerfume, estoque);
 

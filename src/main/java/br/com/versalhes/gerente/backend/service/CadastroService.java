@@ -2,8 +2,15 @@ package br.com.versalhes.gerente.backend.service;
 
 import br.com.versalhes.gerente.backend.model.*;
 import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.FilenameFilter;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,7 +21,10 @@ public class CadastroService {
     final MarcaRepository _marcaRepository;
     final TipoRepository _tipoRepository;
 
-    public CadastroService(PerfumeRepository perfumeRepository, MarcaRepository marcaRepository,TipoRepository tipoRepository) {
+    @Value("${upload.path}")
+    private String _pathImagens;
+
+    public CadastroService(PerfumeRepository perfumeRepository, MarcaRepository marcaRepository, TipoRepository tipoRepository) {
 
         _perfumeRepository = perfumeRepository;
         _marcaRepository = marcaRepository;
@@ -119,6 +129,43 @@ public class CadastroService {
 
         throw new Exception();
 
+    }
+
+    public void GravarImagem(long idPerfume, MultipartFile arquivo) throws Exception {
+
+        Path pathGravacao = Paths.get(_pathImagens);
+
+        if (!Files.exists(pathGravacao)) {
+
+            Files.createDirectories(pathGravacao);
+
+        }
+
+        Path pathCompleto = pathGravacao.resolve(String.format("Perfume%d.png", idPerfume));
+
+        Files.write(pathCompleto, arquivo.getBytes());
+
+    }
+
+    public byte[] ObterImagem(long idPerfume) throws Exception {
+
+        Path pathConsulta = Paths.get(_pathImagens);
+
+        Path pathCompleto = pathConsulta.resolve(String.format("Perfume%d.png", idPerfume));
+
+        return Files.readAllBytes(pathCompleto);
+
+    }
+
+    private String ObterExtensaoArquivo(String nome) throws Exception {
+
+        int lastIndexOfDot = nome.lastIndexOf(".");
+
+        if (lastIndexOfDot == -1) {
+            throw new Exception();
+        }
+
+        return nome.substring(lastIndexOfDot + 1);
     }
 
 }
