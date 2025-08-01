@@ -92,12 +92,30 @@ public class CadastroService {
 
     }
 
-    public List<Perfume> ConsultarPerfumeTodos() {
+    public List<Perfume> ConsultarPerfumeTodos(String filtro) {
 
-        List<Perfume> lista = _perfumeRepository.findAll();
+        List<Perfume> lista;
+
+        if (filtro != null && !filtro.isBlank()) {
+            lista= _perfumeRepository.findByNomeContainingIgnoreCase(filtro);
+        } else {
+            lista= _perfumeRepository.findAll();
+        }
 
         return lista;
+    }
 
+    public List<Perfume> ConsultarPerfumePelaSecao(String filtro) {
+
+        List<Perfume> lista;
+
+        if (filtro != null && !filtro.isBlank()) {
+            lista= _perfumeRepository.findByNomeContainingIgnoreCase(filtro);
+        } else {
+            lista= _perfumeRepository.findAll();
+        }
+
+        return lista;
     }
 
     public Perfume ConsultarPerfumePeloId(long idPerfume) throws Exception {
@@ -168,6 +186,14 @@ public class CadastroService {
         }
 
         return nome.substring(lastIndexOfDot + 1);
+    }
+
+    public enum SessaoEnum
+    {
+        Masculino,
+        Feminino,
+        Especiais,
+        Ofertas
     }
 
 }

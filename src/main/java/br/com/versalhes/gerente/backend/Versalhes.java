@@ -4,10 +4,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class VersalhesGerente {
+public class Versalhes {
 
     public static void main(String[] args) {
-        SpringApplication.run(VersalhesGerente.class, args);
+        SpringApplication.run(Versalhes.class, args);
     }
 
 }

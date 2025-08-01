@@ -10,31 +10,21 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin(origins="*", maxAge = 3600, allowCredentials = "false")
 @RequestMapping("/usuario")
 public class UsuarioController {
-
     private UsuarioService _usuarioService;
 
     public UsuarioController(UsuarioService usuarioService) {
-
         _usuarioService = usuarioService;
-
     }
 
     @GetMapping()
     public ResponseEntity<Usuario> ValidarUsuario(@RequestParam String login, @RequestParam String senha)
     {
-
         try {
-
             Usuario usuarioExistente = _usuarioService.ValidarUsuario(login, senha);
 
             return ResponseEntity.status(HttpStatus.OK).body(usuarioExistente);
-
         } catch (Exception ex) {
-
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-
         }
-
     }
-
 }

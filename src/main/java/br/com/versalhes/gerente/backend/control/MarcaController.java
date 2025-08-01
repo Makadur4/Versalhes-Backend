@@ -15,22 +15,16 @@ import java.util.List;
 @CrossOrigin(origins="*", maxAge = 3600, allowCredentials = "false")
 @RequestMapping("/marca")
 public class MarcaController {
-
     CadastroService _cadastroService;
 
     public MarcaController(CadastroService cadastroService) {
-
         _cadastroService = cadastroService;
-
     }
 
     @GetMapping
     public ResponseEntity<List<Marca>> ConsultarMarcaTodos() {
-
         List<Marca> lista = _cadastroService.ConsultarMarcaTodas();
 
         return ResponseEntity.status(HttpStatus.OK).body(lista);
-
     }
-
 }
