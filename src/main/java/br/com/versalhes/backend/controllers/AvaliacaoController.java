@@ -46,11 +46,11 @@ public class AvaliacaoController {
 
             _avaliacaoService.incluirAvaliacao(avaliacao);
 
-            return ResponseEntity.status(HttpStatus.OK).build();
+            return ResponseEntity.status(HttpStatus.CREATED).build();
         } catch(NoSuchElementException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         } catch (DataIntegrityViolationException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).build();
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
