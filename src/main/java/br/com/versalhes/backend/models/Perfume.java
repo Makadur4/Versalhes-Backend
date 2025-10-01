@@ -126,7 +126,7 @@ public class Perfume {
         this.precoNormal = precoNormal;
     }
 
-    public boolean isOferta() {
+    public boolean getOferta() {
         return oferta;
     }
     public void setOferta(boolean oferta) {
@@ -157,6 +157,7 @@ public class Perfume {
     public List<Avaliacao> getAvaliacoes() { return avaliacoes; }
     public void setAvaliacoes(List<Avaliacao> avaliacoes) { this.avaliacoes = avaliacoes; }
 
+    @JsonIgnore
     public int getTotalAvaliacoes() { return avaliacoes.size(); }
 
     public List<Favorito> getFavoritos() { return favoritos; }
@@ -165,5 +166,6 @@ public class Perfume {
     public List<ItemPedido> getItensPedido() { return itensPedido; }
     public void setItensPedido(List<ItemPedido> itensPedido) { this.itensPedido = itensPedido; }
 
+    @JsonIgnore
     public int getTotalPedidos() { return itensPedido.size(); }
 }

@@ -2,6 +2,7 @@ package br.com.versalhes.backend.controllers;
 
 import br.com.versalhes.backend.models.Perfume;
 
+import br.com.versalhes.backend.security.SecurityUtil;
 import br.com.versalhes.backend.services.PerfumeService;
 
 import org.apache.tomcat.util.http.fileupload.FileUploadException;
@@ -29,8 +30,13 @@ public class PerfumeController {
     PerfumeService _perfumeService;
 
     @PostMapping("incluir-perfume")
-    public ResponseEntity<Perfume> IncluirPerfume(@RequestBody Perfume perfume) {
+    public ResponseEntity<Perfume> incluirPerfume(@RequestBody Perfume perfume) {
         try {
+            if(SecurityUtil.obterUsuarioId() == null)
+            {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            }
+
             Perfume novoPerfume = _perfumeService.incluirPerfume(perfume);
 
             return ResponseEntity.status(HttpStatus.CREATED).body(novoPerfume);
@@ -42,8 +48,13 @@ public class PerfumeController {
     }
 
     @GetMapping("obter-perfumes-cadastro")
-    public ResponseEntity<List<Perfume>> obterPerfumesCadastro(@RequestParam String nome) {
+    public ResponseEntity<List<Perfume>> obterPerfumesCadastro(@RequestParam(required = false) String nome) {
         try {
+            if(SecurityUtil.obterUsuarioId() == null)
+            {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            }
+
             List<Perfume> lista = _perfumeService.obterPerfumesCadastro(nome);
 
             return ResponseEntity.status(HttpStatus.OK).body(lista);
@@ -55,8 +66,8 @@ public class PerfumeController {
     @GetMapping("obter-perfumes-avaliacao")
     public ResponseEntity<List<Perfume>> obterPerfumesAvaliacao(@RequestParam String nome, @RequestParam String marcas, @RequestParam String tipos, @RequestParam String ordenacao) {
         try {
-            List<Long> filtroMarcas = Arrays.asList(marcas.split("\\|")).stream().map(Long::parseLong).toList();
-            List<Long> filtroTipos = Arrays.asList(tipos.split("\\|")).stream().map(Long::parseLong).toList();
+            List<Long> filtroMarcas = marcas.isEmpty() ? new ArrayList<Long>() : Arrays.asList(marcas.split("\\|")).stream().map(Long::parseLong).toList();
+            List<Long> filtroTipos = tipos.isEmpty() ? new ArrayList<Long>() : Arrays.asList(tipos.split("\\|")).stream().map(Long::parseLong).toList();
             PerfumeService.Ordenacao opcaoOrdenacao = PerfumeService.Ordenacao.obterEnum(ordenacao);
 
             List<Perfume> lista = _perfumeService.obterPerfumesAvaliacao(nome, filtroMarcas, filtroTipos, opcaoOrdenacao);
@@ -70,7 +81,6 @@ public class PerfumeController {
     @GetMapping("obter-perfumes-venda")
     public ResponseEntity<List<Perfume>> obterPerfumesVenda(@RequestParam String nome, @RequestParam String secao, @RequestParam String preco, @RequestParam String marcas, @RequestParam String tipos) {
         try {
-
             PerfumeService.Secao filtroSecao = PerfumeService.Secao.obterEnum(secao);
             Double filtroPreco = preco != null ? Double.parseDouble(preco) : 0;
             List<Long> filtroMarcas = Arrays.asList(marcas.split("\\|")).stream().map(Long::parseLong).toList();
@@ -98,8 +108,13 @@ public class PerfumeController {
     }
 
     @PutMapping("alterar-perfume/{id}")
-    public ResponseEntity<Perfume> AlterarPerfume(@PathVariable("id") long id, @RequestBody Perfume perfume) {
+    public ResponseEntity<Perfume> alterarPerfume(@PathVariable("id") long id, @RequestBody Perfume perfume) {
         try {
+            if(SecurityUtil.obterUsuarioId() == null)
+            {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            }
+
             perfume.setId(id);
 
             Perfume perfumeAtualizado = _perfumeService.alterarPerfume(perfume);
@@ -115,7 +130,7 @@ public class PerfumeController {
     }
 
     @PatchMapping("alterar-estoque/{id}")
-    public ResponseEntity<Object> AlterarEstoque(@PathVariable("id") long id, @RequestBody AlterarEstoqueRequest request) {
+    public ResponseEntity<Object> alterarEstoque(@PathVariable("id") long id, @RequestBody AlterarEstoqueRequest request) {
         try {
             _perfumeService.alterarEstoque(id, request.estoque);
 
@@ -146,12 +161,12 @@ public class PerfumeController {
         }
     }
 
-    @PostMapping("incluir-imagem/{id}")
-    public ResponseEntity<Void> incluirImagem(@PathVariable("id") long id, @RequestParam("arquivo") MultipartFile arquivo) {
+    @PostMapping("incluir-imagem")
+    public ResponseEntity<Void> incluirImagem(@RequestParam("perfumeId") String perfumeId, @RequestParam("arquivo") MultipartFile arquivo) {
         try {
             if(arquivo == null || arquivo.isEmpty()) { throw new FileUploadException(""); }
 
-            _perfumeService.incluirImagem(id, arquivo);
+            _perfumeService.incluirImagem(Long.parseLong(perfumeId), arquivo);
 
             return ResponseEntity.status(HttpStatus.OK).build();
         } catch(NoSuchElementException e) {
@@ -164,7 +179,7 @@ public class PerfumeController {
     }
 
     @GetMapping("obter-imagem/{id}")
-    public ResponseEntity<byte[]> ObterImagem(@PathVariable("id") long id) {
+    public ResponseEntity<byte[]> obterImagem(@PathVariable("id") long id) {
         try {
             byte[] imagem = _perfumeService.obterImagem(id);
 

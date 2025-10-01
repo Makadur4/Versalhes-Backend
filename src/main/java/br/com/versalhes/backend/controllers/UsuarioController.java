@@ -21,11 +21,11 @@ public class UsuarioController {
     private UsuarioService _usuarioService;
 
     @GetMapping("validar-usuario")
-    public ResponseEntity<String> ValidarUsuario(@RequestHeader String login, @RequestHeader String senha) {
+    public ResponseEntity<String> validarUsuario(@RequestHeader String login, @RequestHeader String senha) {
         try {
             Usuario usuarioExistente = _usuarioService.validarUsuario(login, senha);
 
-            String token = JwtUtil.gerarToken(usuarioExistente.getId());
+            String token = JwtUtil.gerarToken("usuario", usuarioExistente.getId());
 
             return ResponseEntity.status(HttpStatus.OK).body(token);
         } catch(NoSuchElementException e) {

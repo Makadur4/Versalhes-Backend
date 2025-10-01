@@ -30,7 +30,7 @@ public class AvaliacaoController {
     @PostMapping("incluir-avaliacao")
     public ResponseEntity<Void> incluirAvaliacao(@RequestBody IncluirAvaliacaoRequest request) {
         try {
-            Long clienteId = SecurityUtil.obterId();
+            Long clienteId = SecurityUtil.obterClienteId();
 
             Perfume perfume = new Perfume();
             perfume.setId(request.perfumeId());
@@ -73,7 +73,7 @@ public class AvaliacaoController {
     @GetMapping("obter-avaliacoes-cliente")
     public ResponseEntity<List<AvaliacaoResponse>> obterAvaliacoesCliente() {
         try {
-            Long clienteId = SecurityUtil.obterId();
+            Long clienteId = SecurityUtil.obterClienteId();
 
             List<Avaliacao> lista = _avaliacaoService.obterAvaliacoesCliente(clienteId != null ? clienteId : 0);
             List<AvaliacaoResponse> response = MapearAvaliacaoAvaliacaoResponse(lista);
@@ -89,7 +89,6 @@ public class AvaliacaoController {
                 item.getId(),
                 item.getPerfume().getId(),
                 item.getPerfume().getNome(),
-                item.getCliente().getId(),
                 item.getCliente().getNome(),
                 item.getDescricao(),
                 item.getAvaliacao()
@@ -97,12 +96,12 @@ public class AvaliacaoController {
         ).toList();
     }
 
-    public record AvaliacaoResponse(long id, long perfumeId, String perfume, long clienteId, String cliente, String descricao, int avaliacao) { }
+    public record AvaliacaoResponse(long id, long perfumeId, String perfume, String cliente, String descricao, int avaliacao) { }
 
     @DeleteMapping("excluir-avaliacao/{id}")
     public ResponseEntity<Avaliacao> excluirAvaliacao(@PathVariable("id") long id) {
         try {
-            Long clienteId = SecurityUtil.obterId();
+            Long clienteId = SecurityUtil.obterClienteId();
 
             _avaliacaoService.excluirAvaliacao(id, clienteId != null ? clienteId : 0);
 

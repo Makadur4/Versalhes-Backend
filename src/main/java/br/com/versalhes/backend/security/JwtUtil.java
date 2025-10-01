@@ -14,9 +14,10 @@ public class JwtUtil {
         return Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
     }
 
-    public static String gerarToken(Long id) {
+    public static String gerarToken(String perfil, Long id) {
         return Jwts.builder()
                 .claim("id", id)
+                .claim("perfil", perfil)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
                 .signWith(obterChave(), SignatureAlgorithm.HS256)
@@ -35,8 +36,18 @@ public class JwtUtil {
         }
     }
 
-    public static Long obterId(String token) {
+    public static Secao obterSecao(String token) {
         Claims claims = validarToken(token);
-        return claims != null ? claims.get("id", Long.class) : null;
+
+        String perfil = claims != null ? claims.get("perfil", String.class) : null;
+        Long id = claims != null ? claims.get("id", Long.class) : null;
+
+        if(perfil!=null && id != null) {
+            return new Secao(perfil, id);
+        }
+
+        return null;
     }
+
+    public record Secao(String perfil, Long id) {}
 }

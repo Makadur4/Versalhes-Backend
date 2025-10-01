@@ -43,7 +43,7 @@ public class ClienteController {
     @GetMapping("obter-cliente")
     public ResponseEntity<Cliente> obterCliente() {
         try {
-            Long id = SecurityUtil.obterId();
+            Long id = SecurityUtil.obterClienteId();
 
             Cliente clienteExistente = _clienteService.obterCliente(id != null ? id : 0);
 
@@ -58,9 +58,9 @@ public class ClienteController {
     @PutMapping("alterar-cliente")
     public ResponseEntity<Cliente> alterarCliente(@RequestBody Cliente cliente) {
         try {
-            Long id = SecurityUtil.obterId();
+            Long clienteId = SecurityUtil.obterClienteId();
 
-            cliente.setId(id != null ? id : 0);
+            cliente.setId(clienteId != null ? clienteId : 0);
 
             Cliente clienteAtualizado = _clienteService.alterarCliente(cliente);
 
@@ -79,7 +79,7 @@ public class ClienteController {
         try {
             Cliente clienteExistente = _clienteService.validarCLiente(email, senha);
 
-            String token = JwtUtil.gerarToken(clienteExistente.getId());
+            String token = JwtUtil.gerarToken("cliente", clienteExistente.getId());
 
             return ResponseEntity.status(HttpStatus.OK).body(token);
         } catch(NoSuchElementException e) {
@@ -128,7 +128,7 @@ public class ClienteController {
     @GetMapping("obter-endereco-cliente")
     public ResponseEntity<EnderecoCliente> obterEnderecoCliente() {
         try {
-            Long clienteId = SecurityUtil.obterId();
+            Long clienteId = SecurityUtil.obterClienteId();
 
             EnderecoCliente enderecoClienteExistente = _clienteService.obterEnderecoCliente(clienteId != null ? clienteId : 0);
 
@@ -145,7 +145,7 @@ public class ClienteController {
     @PutMapping("alterar-endereco-cliente")
     public ResponseEntity<EnderecoCliente> alterarEnderecoCliente(@RequestBody EnderecoCliente enderecoCliente) {
         try {
-            Long clienteId = SecurityUtil.obterId();
+            Long clienteId = SecurityUtil.obterClienteId();
 
             enderecoCliente.setClienteId(clienteId != null ? clienteId : 0);
 

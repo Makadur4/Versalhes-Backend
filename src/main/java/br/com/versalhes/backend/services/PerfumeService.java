@@ -33,6 +33,9 @@ public class PerfumeService {
 
     @Transactional
     public Perfume incluirPerfume(Perfume perfume) throws Exception {
+        perfume.setMediaAvaliacao((short) 3);
+        perfume.setPrecoVenda(perfume.getOferta() ? perfume.getPrecoOferta() : perfume.getPrecoNormal());
+
         return _perfumeRepository.save(perfume);
     }
 
@@ -96,11 +99,11 @@ public class PerfumeService {
                 }
 
                 if (marcas != null && !marcas.isEmpty()) {
-                    predicates.add(root.get("marca").in(marcas));
+                    predicates.add(root.get("marca").get("id").in(marcas));
                 }
 
                 if (tipos != null && !tipos.isEmpty()) {
-                    predicates.add(root.get("tipo").in(tipos));
+                    predicates.add(root.get("tipo").get("id").in(tipos));
                 }
 
                 return cb.and(predicates.toArray(new Predicate[0]));
@@ -156,7 +159,10 @@ public class PerfumeService {
 
     @Transactional
     public Perfume alterarPerfume(Perfume perfume) throws Exception {
-        _perfumeRepository.findById(perfume.getId()).orElseThrow();
+        Perfume perfumeExistente = _perfumeRepository.findById(perfume.getId()).orElseThrow();
+
+        perfume.setMediaAvaliacao(perfumeExistente.getMediaAvaliacao());
+        perfume.setPrecoVenda(perfume.getOferta() ? perfume.getPrecoOferta() : perfume.getPrecoNormal());
 
         return _perfumeRepository.save(perfume);
     }

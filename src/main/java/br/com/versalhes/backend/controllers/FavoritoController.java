@@ -28,7 +28,7 @@ public class FavoritoController {
     @PostMapping("incluir-favorito")
     public ResponseEntity<Void> incluirFavorito(@RequestBody IncluirFavoritoRequest request) {
         try {
-            Long clienteId = SecurityUtil.obterId();
+            Long clienteId = SecurityUtil.obterClienteId();
 
             Perfume perfume = new Perfume();
             perfume.setId(request.perfumeId());
@@ -57,7 +57,7 @@ public class FavoritoController {
     @GetMapping("obter-favorito/{perfumeId}")
     public ResponseEntity<Favorito> obterAvaliacoesPerfume(@PathVariable("perfumeId") long perfumeId) {
         try {
-            Long clienteId = SecurityUtil.obterId();
+            Long clienteId = SecurityUtil.obterClienteId();
 
             Favorito favorito = _favoritoService.obterFavorito(perfumeId, clienteId != null ? clienteId : 0).orElse(new Favorito());
 
@@ -70,7 +70,7 @@ public class FavoritoController {
     @DeleteMapping("excluir-favorito/{id}")
     public ResponseEntity<Void> excluirAvaliacao(@PathVariable("id") long id) {
         try {
-            Long clienteId = SecurityUtil.obterId();
+            Long clienteId = SecurityUtil.obterClienteId();
 
             _favoritoService.excluirFavorito(id, clienteId != null ? clienteId : 0);
 

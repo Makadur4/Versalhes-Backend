@@ -27,7 +27,7 @@ public class PedidoController {
     @PostMapping("incluir-pedido")
     public ResponseEntity<Pedido> incluirPedido(@RequestBody IncluirPedidoRequest request) {
         try {
-            Long clienteId = SecurityUtil.obterId();
+            Long clienteId = SecurityUtil.obterClienteId();
 
             Pedido novoPedido = _pedidoService.incluirPedido(clienteId != null ? clienteId : 0, request.freteId, request.dadosPagamento, request.itensPedido);
 
@@ -46,7 +46,7 @@ public class PedidoController {
     @GetMapping("obter-pedidos")
     public ResponseEntity<List<Pedido>> obterPedidos() {
         try {
-            Long clienteId = SecurityUtil.obterId();
+            Long clienteId = SecurityUtil.obterClienteId();
 
             List<Pedido> lista = _pedidoService.obterPedidos(clienteId != null ? clienteId : 0);
 
@@ -59,7 +59,7 @@ public class PedidoController {
     @GetMapping("obter-pedido/{id}")
     public ResponseEntity<Pedido> obterPedido(@PathVariable("id") long id) {
         try {
-            Long clienteId = SecurityUtil.obterId();
+            Long clienteId = SecurityUtil.obterClienteId();
 
             Pedido pedidoExistente = _pedidoService.obterPedido(id, clienteId != null ? clienteId : 0);
 
@@ -76,7 +76,7 @@ public class PedidoController {
     @PatchMapping("cancelar-pedido/{id}")
     public ResponseEntity<Pedido> cancelarPedido(@PathVariable("id") long id) {
         try {
-            Long clienteId = SecurityUtil.obterId();
+            Long clienteId = SecurityUtil.obterClienteId();
 
             _pedidoService.cancelarPedido(id, clienteId != null ? clienteId : 0);
 

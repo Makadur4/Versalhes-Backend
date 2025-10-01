@@ -7,6 +7,7 @@ import br.com.versalhes.backend.repositories.*;
 import jakarta.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -46,6 +47,10 @@ public class PedidoService {
         for(ItemPedido itemPedido : itensPedido)
         {
             Perfume perfumeExistente = _perfumeRepository.findById(itemPedido.getPerfume().getId()).orElseThrow();
+
+            if(perfumeExistente.getEstoque() < itemPedido.getQuantidade()) { throw new DataIntegrityViolationException("Quantidade disponível inferior ao solicitado"); }
+
+            perfumeExistente.setEstoque(perfumeExistente.getEstoque() - itemPedido.getQuantidade());
 
             itemPedido.setPerfume(perfumeExistente);
             itemPedido.setValorUnitario(perfumeExistente.getPrecoVenda());
@@ -93,6 +98,8 @@ public class PedidoService {
         {
             itemPedido.setPedido(novoPedido);
             ItemPedido novoItemPedido = _itemPedidoRepository.save(itemPedido);
+
+            _perfumeRepository.save(itemPedido.getPerfume());
         }
 
         novoPedido.setItensPedido(itensPedido);
