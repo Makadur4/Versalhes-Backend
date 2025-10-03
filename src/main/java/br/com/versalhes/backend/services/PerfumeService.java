@@ -57,7 +57,7 @@ public class PerfumeService {
     }
 
     public List<Perfume> obterPerfumesVenda(String nome, Secao secao, Double preco, List<Long> marcas, List<Long> tipos) {
-        return _perfumeRepository.findAll(PerfumeSpecification.filtrar(nome, marcas, tipos));
+        return _perfumeRepository.findAll(PerfumeSpecification.filtrar(nome, secao, preco, marcas, tipos));
     }
 
     public static class PerfumeSpecification {

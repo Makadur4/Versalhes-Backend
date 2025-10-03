@@ -1,8 +1,9 @@
 package br.com.versalhes.backend.services;
 
+import br.com.versalhes.backend.models.Cliente;
 import br.com.versalhes.backend.models.Favorito;
 
-import br.com.versalhes.backend.models.Perfume;
+import br.com.versalhes.backend.repositories.ClienteRepository;
 import br.com.versalhes.backend.repositories.FavoritoRepository;
 import br.com.versalhes.backend.repositories.PerfumeRepository;
 
@@ -11,11 +12,15 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
 public class FavoritoService {
+    @Autowired
+    ClienteRepository _clienteRepository;
+
     @Autowired
     FavoritoRepository _favoritoRepository;
 
@@ -27,6 +32,12 @@ public class FavoritoService {
         _perfumeRepository.findById(favorito.getPerfume().getId()).orElseThrow();
 
         _favoritoRepository.save(favorito);
+    }
+
+    public List<Favorito> obterFavoritos(long clienteId) throws Exception {
+        _clienteRepository.findById(clienteId).orElseThrow();
+
+        return _favoritoRepository.findByClienteId(clienteId);
     }
 
     public Optional<Favorito> obterFavorito(long perfumeId, long clienteId) throws Exception {

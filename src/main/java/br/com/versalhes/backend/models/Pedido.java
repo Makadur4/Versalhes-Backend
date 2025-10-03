@@ -33,6 +33,9 @@ public class Pedido {
     @Column(name = "DataEntrega")
     private LocalDate dataEntrega;
 
+    @Column(name = "ValorAcrescimo")
+    private double valorAcrescimo;
+
     @Column(name = "ValorTotal")
     private double valorTotal;
 
@@ -71,6 +74,9 @@ public class Pedido {
 
     public LocalDate getDataEntrega() { return dataEntrega; }
     public void setDataEntrega(LocalDate dataEntrega) { this.dataEntrega = dataEntrega; }
+
+    public double getValorAcrescimo() { return valorAcrescimo; }
+    public void setValorAcrescimo(double valorAcrescimo) { this.valorAcrescimo = valorAcrescimo; }
 
     public double getValorTotal() { return valorTotal; }
     public void setValorTotal(double valorTotal) { this.valorTotal = valorTotal; }

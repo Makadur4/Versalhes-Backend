@@ -29,7 +29,7 @@ public class PedidoController {
         try {
             Long clienteId = SecurityUtil.obterClienteId();
 
-            Pedido novoPedido = _pedidoService.incluirPedido(clienteId != null ? clienteId : 0, request.freteId, request.dadosPagamento, request.itensPedido);
+            Pedido novoPedido = _pedidoService.incluirPedido(clienteId != null ? clienteId : 0, request.freteId, request.condicaoPagamentoId, request.dadosPagamento, request.itensPedido);
 
             return ResponseEntity.status(HttpStatus.CREATED).body(novoPedido);
         } catch(NoSuchElementException e) {
@@ -41,7 +41,7 @@ public class PedidoController {
         }
     }
 
-    public record IncluirPedidoRequest(long freteId, DadosPagamento dadosPagamento, List<ItemPedido> itensPedido) {}
+    public record IncluirPedidoRequest(long freteId, long condicaoPagamentoId, DadosPagamento dadosPagamento, List<ItemPedido> itensPedido) {}
 
     @GetMapping("obter-pedidos")
     public ResponseEntity<List<Pedido>> obterPedidos() {
@@ -74,7 +74,7 @@ public class PedidoController {
     }
 
     @PatchMapping("cancelar-pedido/{id}")
-    public ResponseEntity<Pedido> cancelarPedido(@PathVariable("id") long id) {
+    public ResponseEntity<Void> cancelarPedido(@PathVariable("id") long id) {
         try {
             Long clienteId = SecurityUtil.obterClienteId();
 

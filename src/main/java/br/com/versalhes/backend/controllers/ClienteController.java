@@ -111,7 +111,9 @@ public class ClienteController {
     @PatchMapping("alterar-senha")
     public ResponseEntity<Void> alterarSenha(@RequestBody AlterarSenhaRequest request){
         try {
-           _clienteService.alterarSenha(request.chave, request.senha);
+            UUID chave = request.chave!= null ? request.chave : UUID.randomUUID();
+
+           _clienteService.alterarSenha(chave, request.senha);
 
             return ResponseEntity.status(HttpStatus.OK).build();
         } catch(NoSuchElementException e) {

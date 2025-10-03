@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 
 @RestController
@@ -54,8 +55,23 @@ public class FavoritoController {
 
     public record IncluirFavoritoRequest(Long perfumeId) { }
 
+    @GetMapping("obter-favoritos")
+    public ResponseEntity<List<Favorito>> obterFavoritos() {
+        try {
+            Long clienteId = SecurityUtil.obterClienteId();
+
+            List<Favorito> favorito = _favoritoService.obterFavoritos(clienteId != null ? clienteId : 0);
+
+            return ResponseEntity.status(HttpStatus.OK).body(favorito);
+        } catch(NoSuchElementException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
     @GetMapping("obter-favorito/{perfumeId}")
-    public ResponseEntity<Favorito> obterAvaliacoesPerfume(@PathVariable("perfumeId") long perfumeId) {
+    public ResponseEntity<Favorito> obterFavorito(@PathVariable("perfumeId") long perfumeId) {
         try {
             Long clienteId = SecurityUtil.obterClienteId();
 
@@ -68,7 +84,7 @@ public class FavoritoController {
     }
 
     @DeleteMapping("excluir-favorito/{id}")
-    public ResponseEntity<Void> excluirAvaliacao(@PathVariable("id") long id) {
+    public ResponseEntity<Void> excluirFavorito(@PathVariable("id") long id) {
         try {
             Long clienteId = SecurityUtil.obterClienteId();
 

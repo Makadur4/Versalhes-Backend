@@ -13,7 +13,6 @@ public class Favorito {
 
     @ManyToOne
     @JoinColumn(name = "Perfume_Id")
-    @JsonIgnore
     private Perfume perfume;
 
     @ManyToOne

@@ -24,6 +24,9 @@ public class PedidoService {
     FreteRepository _freteRepository;
 
     @Autowired
+    CondicaoPagamentoRepository _condicaoPagamentoRepository;
+
+    @Autowired
     PerfumeRepository _perfumeRepository;
 
     @Autowired
@@ -39,9 +42,10 @@ public class PedidoService {
     ItemPedidoRepository _itemPedidoRepository;
 
     @Transactional
-    public Pedido incluirPedido(long clienteId, long freteId, DadosPagamento dadosPagamento, List<ItemPedido> itensPedido) {
+    public Pedido incluirPedido(long clienteId, long freteId, long condicaoPagamentoId, DadosPagamento dadosPagamento, List<ItemPedido> itensPedido) {
         Cliente clienteExistente = _clienteRepository.findById(clienteId).orElseThrow();
-        Frete freteExistente = _freteRepository.findById( freteId).orElseThrow();;
+        Frete freteExistente = _freteRepository.findById(freteId).orElseThrow();;
+        CondicaoPagamento condicaoPagamentoExistente = _condicaoPagamentoRepository.findById(condicaoPagamentoId).orElseThrow();;
         EnderecoCliente enderecoCliente = clienteExistente.getEnderecoCliente();
 
         for(ItemPedido itemPedido : itensPedido)
@@ -59,6 +63,9 @@ public class PedidoService {
         LocalDate dataPedido = LocalDate.now();
 
         double valorProdutos = itensPedido.stream().mapToDouble(item -> item.getValorUnitario() * item.getQuantidade()).sum();
+        double subTotal = valorProdutos + freteExistente.getValor();
+        double valorAcrescimos = subTotal * condicaoPagamentoExistente.getPercentualAcrescimo() / 100.0;
+        double valorTotal = subTotal + valorAcrescimos;
 
         Pedido pedido = new Pedido();
         pedido.setCliente(clienteExistente);
@@ -67,7 +74,8 @@ public class PedidoService {
         pedido.setPrazoFrete(freteExistente.getPrazo());
         pedido.setValorFrete(freteExistente.getValor());
         pedido.setDataEntrega(dataPedido.plusDays(freteExistente.getPrazo()));
-        pedido.setValorTotal(valorProdutos + freteExistente.getValor());
+        pedido.setValorAcrescimo(valorAcrescimos);
+        pedido.setValorTotal(valorTotal);
         pedido.setStatus(Status.EFETIVADO);
 
         EnderecoEntrega enderecoEntrega = new EnderecoEntrega();
@@ -89,6 +97,7 @@ public class PedidoService {
         String numeroCartao = dadosPagamento.getNumeroCartao().split("-")[3];
 
         dadosPagamento.setNumeroCartao(numeroCartao);
+        dadosPagamento.setQuantidadeParcelas(condicaoPagamentoExistente.getQuantidadeParcelas());
         dadosPagamento.setPedidoId(novoPedido.getId());
         DadosPagamento novosDadosPagamento =  _dadosPagamentoRepository.save(dadosPagamento);
 

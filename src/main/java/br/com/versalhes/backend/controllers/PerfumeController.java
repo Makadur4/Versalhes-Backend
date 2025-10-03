@@ -83,8 +83,8 @@ public class PerfumeController {
         try {
             PerfumeService.Secao filtroSecao = PerfumeService.Secao.obterEnum(secao);
             Double filtroPreco = preco != null ? Double.parseDouble(preco) : 0;
-            List<Long> filtroMarcas = Arrays.asList(marcas.split("\\|")).stream().map(Long::parseLong).toList();
-            List<Long> filtroTipos = Arrays.asList(tipos.split("\\|")).stream().map(Long::parseLong).toList();
+            List<Long> filtroMarcas = marcas.isEmpty() ? null : Arrays.asList(marcas.split("\\|")).stream().map(Long::parseLong).toList();
+            List<Long> filtroTipos = tipos.isEmpty() ? null : Arrays.asList(tipos.split("\\|")).stream().map(Long::parseLong).toList();
 
             List<Perfume> lista = _perfumeService.obterPerfumesVenda(nome, filtroSecao, filtroPreco, filtroMarcas, filtroTipos);
 

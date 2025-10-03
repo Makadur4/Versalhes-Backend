@@ -29,6 +29,7 @@ public class SecurityConfig {
                         .requestMatchers("/cliente/solicitar-recuperacao-senha").permitAll()
                         .requestMatchers("/cliente/alterar-senha").permitAll()
                         .requestMatchers("/perfume/obter-perfumes-avaliacao").permitAll()
+                        .requestMatchers("/perfume/obter-perfumes-venda").permitAll()
                         .requestMatchers("/perfume/obter-perfume/**").permitAll()
                         .requestMatchers("/perfume/obter-imagem/**").permitAll()
                         .requestMatchers("/usuario/**").permitAll()
