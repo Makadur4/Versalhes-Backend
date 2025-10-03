@@ -16,6 +16,7 @@ public class Pedido {
 
     @ManyToOne
     @JoinColumn(name = "Cliente_Id")
+    @JsonIgnore
     private Cliente cliente;
 
     @Column(name = "DataPedido")

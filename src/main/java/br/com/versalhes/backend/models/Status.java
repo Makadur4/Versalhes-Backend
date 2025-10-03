@@ -1,5 +1,7 @@
 package br.com.versalhes.backend.models;
 
+import com.fasterxml.jackson.annotation.JsonValue;
+
 public enum Status {
     EFETIVADO(1),
     APROVADO(2),
@@ -13,6 +15,7 @@ public enum Status {
         this.valor = valor;
     }
 
+    @JsonValue
     public int getValor() {
         return valor;
     }
