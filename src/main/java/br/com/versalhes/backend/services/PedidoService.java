@@ -67,6 +67,7 @@ public class PedidoService {
         double valorAcrescimos = subTotal * condicaoPagamentoExistente.getPercentualAcrescimo() / 100.0;
         double valorTotal = subTotal + valorAcrescimos;
 
+
         Pedido pedido = new Pedido();
         pedido.setCliente(clienteExistente);
         pedido.setDataPedido(dataPedido);
