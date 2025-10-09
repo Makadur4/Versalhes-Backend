@@ -1,11 +1,14 @@
 package br.com.versalhes.backend.controllers;
 
+import br.com.versalhes.backend.dto.DadosPagamentoDto;
 import br.com.versalhes.backend.models.*;
 
 import br.com.versalhes.backend.security.SecurityUtil;
 
 import br.com.versalhes.backend.services.PedidoService;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Id;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 
@@ -41,7 +44,7 @@ public class PedidoController {
         }
     }
 
-    public record IncluirPedidoRequest(long freteId, long condicaoPagamentoId, DadosPagamento dadosPagamento, List<ItemPedido> itensPedido) {}
+    public record IncluirPedidoRequest(long freteId, long condicaoPagamentoId, DadosPagamentoDto dadosPagamento, List<ItemPedido> itensPedido) {}
 
     @GetMapping("obter-pedidos")
     public ResponseEntity<List<Pedido>> obterPedidos() {

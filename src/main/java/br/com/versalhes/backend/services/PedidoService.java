@@ -1,5 +1,7 @@
 package br.com.versalhes.backend.services;
 
+import br.com.versalhes.backend.dto.DadosPagamentoDto;
+import br.com.versalhes.backend.external.AdministradoraCartoes;
 import br.com.versalhes.backend.models.*;
 
 import br.com.versalhes.backend.repositories.*;
@@ -42,7 +44,7 @@ public class PedidoService {
     ItemPedidoRepository _itemPedidoRepository;
 
     @Transactional
-    public Pedido incluirPedido(long clienteId, long freteId, long condicaoPagamentoId, DadosPagamento dadosPagamento, List<ItemPedido> itensPedido) {
+    public Pedido incluirPedido(long clienteId, long freteId, long condicaoPagamentoId, DadosPagamentoDto dadosPagamento, List<ItemPedido> itensPedido) {
         Cliente clienteExistente = _clienteRepository.findById(clienteId).orElseThrow();
         Frete freteExistente = _freteRepository.findById(freteId).orElseThrow();;
         CondicaoPagamento condicaoPagamentoExistente = _condicaoPagamentoRepository.findById(condicaoPagamentoId).orElseThrow();;
@@ -87,6 +89,13 @@ public class PedidoService {
         enderecoEntrega.setMunicipio(enderecoCliente.getMunicipio());
         enderecoEntrega.setUf(enderecoCliente.getUf());
 
+        boolean resultadoPagamento = AdministradoraCartoes.efetuarPagamento(dadosPagamento);
+
+        if(resultadoPagamento == false)
+        {
+            throw new DataIntegrityViolationException("Não autorizado!");
+        }
+
         Pedido novoPedido = _pedidoRepository.save(pedido);
 
         enderecoEntrega.setPedidoId(novoPedido.getId());
@@ -94,14 +103,19 @@ public class PedidoService {
 
         novoPedido.setEnderecoEntrega(novoEnderecoEntrega);
 
-        String numeroCartao = dadosPagamento.getNumeroCartao().split("-")[3];
+        String numeroCartao = dadosPagamento.numeroCartao().split("-")[3];
 
-        dadosPagamento.setNumeroCartao(numeroCartao);
-        dadosPagamento.setQuantidadeParcelas(condicaoPagamentoExistente.getQuantidadeParcelas());
-        dadosPagamento.setPedidoId(novoPedido.getId());
-        DadosPagamento novosDadosPagamento =  _dadosPagamentoRepository.save(dadosPagamento);
+        DadosPagamento novosDadosPagamento = new DadosPagamento();
 
-        novoPedido.setDadosPagamento(novosDadosPagamento);
+        novosDadosPagamento.setPedidoId(novoPedido.getId());
+        novosDadosPagamento.setBandeiraCartao(dadosPagamento.bandeiraCartao());
+        novosDadosPagamento.setNumeroCartao(numeroCartao);
+        novosDadosPagamento.setDataValidade(dadosPagamento.dataValidade());
+        novosDadosPagamento.setQuantidadeParcelas(condicaoPagamentoExistente.getQuantidadeParcelas());
+
+        DadosPagamento dadosPagamentoCriados = _dadosPagamentoRepository.save(novosDadosPagamento);
+
+        novoPedido.setDadosPagamento(dadosPagamentoCriados);
 
         for(ItemPedido itemPedido : itensPedido)
         {

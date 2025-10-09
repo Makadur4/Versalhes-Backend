@@ -95,7 +95,7 @@ public class PerfumeService {
                 }
 
                 if (preco != 0) {
-                    predicates.add(cb.gt(root.get("precoVenda"), preco));
+                    predicates.add(cb.lt(root.get("precoVenda"), preco));
                 }
 
                 if (marcas != null && !marcas.isEmpty()) {
