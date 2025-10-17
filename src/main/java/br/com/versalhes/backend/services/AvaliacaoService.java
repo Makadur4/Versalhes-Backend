@@ -57,5 +57,16 @@ public class AvaliacaoService {
         }
 
         _avaliacaoRepository.deleteById(avaliacaoExistente.getId());
+
+        Perfume perfumeExistente = _perfumeRepository.findById(avaliacaoExistente.getPerfume().getId()).orElseThrow();
+
+        List<Avaliacao> avaliacoes = perfumeExistente.getAvaliacoes();
+        List<Integer> pontuacoes = new java.util.ArrayList<>(avaliacoes.stream().filter((item) ->item.getId()!= id).map(Avaliacao::getAvaliacao).toList());
+
+        double media =  pontuacoes.stream().mapToInt(Integer::intValue).average().orElse(3);
+
+        perfumeExistente.setMediaAvaliacao((short) media);
+
+        _perfumeRepository.save(perfumeExistente);
     }
 }
