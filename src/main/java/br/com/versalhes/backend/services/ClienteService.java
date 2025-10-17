@@ -43,9 +43,10 @@ public class ClienteService {
 
     @Transactional
     public Cliente alterarCliente(Cliente cliente) throws Exception {
-        _clienteRepository.findById(cliente.getId()).orElseThrow();
+        Cliente clienteExistente = _clienteRepository.findById(cliente.getId()).orElseThrow();
 
         cliente.setEmail( cliente.getEmail().toLowerCase(Locale.ROOT));
+        cliente.setSenha(clienteExistente.getSenha());
 
         return _clienteRepository.save(cliente);
     }
