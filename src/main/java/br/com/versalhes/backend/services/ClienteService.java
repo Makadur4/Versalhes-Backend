@@ -46,8 +46,8 @@ public class ClienteService {
         Cliente clienteExistente = _clienteRepository.findById(cliente.getId()).orElseThrow();
 
         cliente.setEmail( cliente.getEmail().toLowerCase(Locale.ROOT));
-        cliente.setEnderecoCliente(clienteExistente.getEnderecoCliente());
         cliente.setSenha(clienteExistente.getSenha());
+        cliente.setEnderecoCliente(clienteExistente.getEnderecoCliente());
 
         return _clienteRepository.save(cliente);
     }

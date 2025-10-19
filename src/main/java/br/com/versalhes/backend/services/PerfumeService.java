@@ -79,11 +79,11 @@ public class PerfumeService {
                 }
 
                 if (secao == Secao.MASCULINOS) {
-                    predicates.add(cb.equal(root.get("genero"), "M"));
+                    predicates.add(root.get("genero").in("M", "U"));
                 }
 
                 if (secao == Secao.FEMININOS) {
-                    predicates.add(cb.equal(root.get("genero"), "F"));
+                    predicates.add(root.get("genero").in("F", "U"));
                 }
 
                 if (secao == Secao.ESPECIAIS) {
@@ -95,7 +95,7 @@ public class PerfumeService {
                 }
 
                 if (preco != 0) {
-                    predicates.add(cb.lt(root.get("precoVenda"), preco));
+                    predicates.add(cb.lessThanOrEqualTo(root.get("precoVenda"), preco));
                 }
 
                 if (marcas != null && !marcas.isEmpty()) {
